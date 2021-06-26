@@ -3,9 +3,10 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const fileupload = require('express-fileupload');
-require('colors');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
+const cookieParse = require('cookie-parser');
+require('colors');
 
 // Load env vars
 dotenv.config({ path: './config/config.env' });
@@ -16,11 +17,15 @@ connectDB();
 // Route files
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
+const auth = require('./routes/auth');
 
 const app = express();
 
 // Body parser
 app.use(express.json());
+
+// Cookie Parser
+app.use(cookieParse());
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {
@@ -37,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 let version = '/api/v1';
 app.use(`${version}/bootcamps`, bootcamps);
 app.use(`${version}/courses`, courses);
+app.use(`${version}/auth`, auth);
 
 app.get('/', (request, response) => {
   response.send('Hello from express');
