@@ -1,6 +1,8 @@
+const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const fileupload = require('express-fileupload');
 require('colors');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
@@ -13,6 +15,7 @@ connectDB();
 
 // Route files
 const bootcamps = require('./routes/bootcamps');
+const courses = require('./routes/courses');
 
 const app = express();
 
@@ -24,9 +27,16 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// File uploading middleware
+app.use(fileupload());
+
+//Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 //Mount routers
 let version = '/api/v1';
 app.use(`${version}/bootcamps`, bootcamps);
+app.use(`${version}/courses`, courses);
 
 app.get('/', (request, response) => {
   response.send('Hello from express');
