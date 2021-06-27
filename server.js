@@ -18,6 +18,7 @@ connectDB();
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
 const auth = require('./routes/auth');
+const users = require('./routes/users');
 
 const app = express();
 
@@ -43,6 +44,7 @@ let version = '/api/v1';
 app.use(`${version}/bootcamps`, bootcamps);
 app.use(`${version}/courses`, courses);
 app.use(`${version}/auth`, auth);
+app.use(`${version}/users`, users);
 
 app.get('/', (request, response) => {
   response.send('Hello from express');
