@@ -63,7 +63,18 @@ app.use(limiter);
 app.use(hpp());
 
 // Set security headers
-app.use(helmet());
+// app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        'script-src': ["'self'", "'unsafe-inline'", 'http://localhost:5000/'],
+      },
+    },
+  }),
+);
 
 //Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -76,9 +87,9 @@ app.use(`${version}/auth`, auth);
 app.use(`${version}/users`, users);
 app.use(`${version}/reviews`, reviews);
 
-app.get('/', (request, response) => {
-  response.send('Hello from express');
-});
+// app.get('/', (request, response) => {
+//   response.send('Hello from express');
+// });
 
 //Error Handler Middleware
 app.use(errorHandler);
